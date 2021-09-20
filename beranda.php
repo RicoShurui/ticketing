@@ -1,6 +1,14 @@
   <?php 
+  session_start();
   $thn = (empty($_GET['thn'])) ? date('Y'): $_GET['thn'];
-  $sql = "SELECT *, count(*) as jumlah FROM `tb_ticket` WHERE YEAR(tgl_buat) = ? GROUP BY status_ticket, MONTH(tgl_buat)";
+  if($_SESSION['login']['level'] == 1){
+    $sql = "SELECT *, count(*) as jumlah FROM `tb_ticket` WHERE YEAR(tgl_buat) = ? GROUP BY status_ticket, MONTH(tgl_buat)";
+  }else if($_SESSION['login']['level'] == 2){
+    $sql = "SELECT a.*, count(a.id_ticket) as jumlah FROM `tb_ticket` a LEFT JOIN tb_user b ON a.id_requestor = b.id_user WHERE YEAR(a.tgl_buat) = ? AND b.departemen = '".$_SESSION['login']['departemen']."' GROUP BY a.status_ticket, MONTH(a.tgl_buat)";
+    echo $sql;
+  }else if($_SESSION['login']['level'] == 3){
+    $sql = "SELECT *, count(*) as jumlah FROM `tb_ticket` WHERE YEAR(tgl_buat) = ? AND id_requestor = ".$_SESSION['login']['id_user']." GROUP BY status_ticket, MONTH(tgl_buat)";
+  }
   $row = $config->prepare($sql);
   $row->execute(array($thn));
   $has = $row->fetchAll(PDO::FETCH_OBJ);

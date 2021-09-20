@@ -3,7 +3,7 @@
     require_once '../../../config.php';
 
     extract($_GET);
-    $sql = "SELECT a.*, b.nama_lengkap, (SELECT nama_lengkap FROM tb_user WHERE id_user = a.id_user) as petugas FROM tb_ticket a LEFT JOIN tb_user b ON a.id_requestor = b.id_user WHERE a.id_requestor = ".$_SESSION['login']['id_user']." AND id_ticket = ".$id;
+    $sql = "SELECT a.*, b.nama_lengkap, (SELECT nama_lengkap FROM tb_user WHERE id_user = a.id_user) as petugas FROM tb_ticket a LEFT JOIN tb_user b ON a.id_requestor = b.id_user WHERE id_ticket = ".$id;
     $row = $config->prepare($sql);
     $row->execute();
     $hasil = $row->fetch(PDO::FETCH_OBJ);
