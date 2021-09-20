@@ -2,7 +2,11 @@
   session_start();
   require_once "../../../config.php";
 
-  $sql = "SELECT a.*, b.nama_lengkap, (SELECT nama_lengkap FROM tb_user WHERE id_user = a.id_user) as petugas FROM tb_ticket a LEFT JOIN tb_user b ON a.id_requestor = b.id_user WHERE a.id_requestor = ".$_SESSION['login']['id_user'];
+  if($_SESSION['login']['level'] == 2){
+    $sql = "SELECT a.*, b.nama_lengkap, (SELECT nama_lengkap FROM tb_user WHERE id_user = a.id_user) as petugas FROM tb_ticket a LEFT JOIN tb_user b ON a.id_requestor = b.id_user WHERE b.departemen = '".$_SESSION['login']['departemen']."'";
+  }else{
+    $sql = "SELECT a.*, b.nama_lengkap, (SELECT nama_lengkap FROM tb_user WHERE id_user = a.id_user) as petugas FROM tb_ticket a LEFT JOIN tb_user b ON a.id_requestor = b.id_user WHERE a.id_requestor = ".$_SESSION['login']['id_user'];
+  }
   $row = $config->prepare($sql);
   $row->execute();
   $has = $row->fetchAll(PDO::FETCH_OBJ);

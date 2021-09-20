@@ -16,6 +16,8 @@
   <!-- Datatable -->
   <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.bootstrap4.min.css" rel="stylesheet">
+  <!-- Chart JS -->
+  <script src="assets/js/Chart.min.js"></script>
 </head>
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
@@ -135,12 +137,20 @@
                 <i class="nav-icon fas fa-ticket-alt"></i>
                 <p>
                   Ticket
-                  <!-- <span class="right badge badge-danger">New</span> -->
+                  <?php 
+                    $s = "SELECT * FROM `tb_ticket` WHERE `status_ticket` NOT IN (3,4)";
+                    $q = $config->prepare($s);
+                    $q->execute();
+                    $j = $q->rowCount();
+                    if($j > 0){
+                  ?>
+                    <span class="right badge badge-danger"><?= $j ?></span>
+                <?php } ?>
                 </p>
               </a>
             </li>
           <?php } ?>
-          <?php if($_SESSION['login']['level'] == 3){ ?>
+          <?php if($_SESSION['login']['level'] == 2 || $_SESSION['login']['level'] == 3){ ?>
             <li class="nav-item">
               <?php 
                 if($_GET['page'] == 'tiket'){
